@@ -40,7 +40,6 @@ public class ViRedisTest {
         client.deleteKey(key2);
         assertEquals(true, client.closeConnection());
 
-        //close Connection
     }
 
     @Test
@@ -147,7 +146,6 @@ public class ViRedisTest {
         assertEquals(value2, client.popListFromEnd(keyListName));
         assertEquals("0", client.removeFromList(keyListName, value2));
 
-
         client.deleteKey(keyListName);
 
     }
@@ -214,13 +212,12 @@ public class ViRedisTest {
 
         client.deleteKey(integerKey);
 
-
     }
 
     @Test
     public void testParalledClients() throws IOException {
 
-        int totalClients = 200;
+        int totalClients = 50;
         ViRedis [] clients = new ViRedis[totalClients];
         Thread [] threads = new Thread[totalClients];
 
@@ -238,9 +235,6 @@ public class ViRedisTest {
         for(int i=0; i<totalClients; i++){
             assertEquals(value1+i,clients[i].get(key1+i));
         }
-
-
-
 
     }
 
