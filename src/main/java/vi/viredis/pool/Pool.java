@@ -3,7 +3,7 @@ package vi.viredis.pool;
 import vi.viredis.client.ViRedis;
 
 /*
- *  Pool interface represents the common pool methods
+ *  represents the common pool methods
  */
 public interface Pool {
 

@@ -5,7 +5,9 @@ import vi.viredis.client.ViRedis;
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedTransferQueue;
-
+/*
+ *  implements the method of common pool interface
+ */
 public abstract class ObjectPool implements Pool{
     private int size;
     private boolean shutdown;
@@ -32,6 +34,14 @@ public abstract class ObjectPool implements Pool{
         }
     }
 
+    /*
+     * created the redis connection
+     * @param host
+     *        redis server host name
+     * @param port
+     *        redis server port
+     * @throws RedisException
+     */
     private ViRedis createRedisConnection(String host, int port) throws RedisException {
         try {
             return  new ViRedis(host, port);
@@ -40,6 +50,10 @@ public abstract class ObjectPool implements Pool{
         }
     }
 
+    /*
+     * returns the pooled redis connection object
+     * @throws RedisException
+     */
     @Override
     public ViRedis get() throws RedisException {
         if (!shutdown) {
@@ -55,6 +69,10 @@ public abstract class ObjectPool implements Pool{
         throw new IllegalStateException("pool is already shutdown.");
     }
 
+    /*
+     * sends back the used connection object to the pool
+     * @throws RedisException
+     */
     @Override
     public void returnConnection(ViRedis viRedis) throws RedisException {
         try {
@@ -64,11 +82,17 @@ public abstract class ObjectPool implements Pool{
         }
     }
 
+    /*
+     * clears the pool
+     */
+
     @Override
     public void shutdown() {
         queue.clear();
     }
-
+    /*
+     * returns the size of the pool
+     */
     public int size() {
         return queue.size();
     }
