@@ -16,6 +16,18 @@ public abstract class ObjectPool implements Pool{
     private int port;
     private BlockingQueue<ViRedis> queue;
 
+    /*
+     *  initializes the pool with given parameters
+     *
+     *  @param size
+     *         size of the pool
+     *  @param host
+     *         redis server host
+     *  @param port
+     *         redis server port
+     *  @throws RedisException
+     *          if there is connectivity issue with the redis server
+     */
     public ObjectPool(int size, String host, int port) throws RedisException {
         this.size = size;
         this.host = host;
