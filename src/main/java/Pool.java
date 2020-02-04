@@ -1,6 +1,6 @@
 import vi.viredis.client.ViRedis;
 
-public interface Pool<T> {
+public interface Pool {
 
     /*
      * @return one of the pooled objects.
@@ -10,7 +10,7 @@ public interface Pool<T> {
     /*
      * @param object T to be return back to pool
      */
-    void release(T object);
+    void release(ViRedis object);
 
     /**
      * Shuts down the pool. Should release all resources.

@@ -4,7 +4,13 @@ import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedTransferQueue;
 
-public abstract class ObjectPool<T> implements Pool<T> {
+/**
+ *
+ *
+ *
+ */
+
+public abstract class ObjectPool implements Pool {
     private int size;
     private String host;
     private int port;
@@ -29,9 +35,9 @@ public abstract class ObjectPool<T> implements Pool<T> {
         }
     }
 
-    private T createRedisConnection(String host, int port) {
+    private ViRedis createRedisConnection(String host, int port) {
         try {
-            return (T) new ViRedis(host, port);
+            return  new ViRedis(host, port);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,9 +63,9 @@ public abstract class ObjectPool<T> implements Pool<T> {
     }
 
     @Override
-    public void release(T t) {
+    public void release(ViRedis viRedis) {
         try {
-            objects.offer(t);
+            objects.offer(viRedis);
         } catch (Exception e) {
             e.printStackTrace();
         }

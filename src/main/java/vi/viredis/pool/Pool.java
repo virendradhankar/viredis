@@ -2,17 +2,20 @@ package vi.viredis.pool;
 
 import vi.viredis.client.ViRedis;
 
-public interface Pool<T> {
+/*
+ *  Pool interface represents the common pool methods
+ */
+public interface Pool {
 
     /*
-     * @return one of the pooled objects.
+     * @return one of the pooled redis object.
      */
-    ViRedis get();
+    ViRedis get() throws RedisException;
 
     /*
-     * @param object T to be return back to pool
+     * @param viRedis to be return back to pool
      */
-    void release(T object);
+    void returnConnection(ViRedis viRedis) throws RedisException;
 
     /**
      * Shuts down the pool. Should release all resources.

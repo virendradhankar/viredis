@@ -35,7 +35,6 @@ public class ViRedisTest {
     @After
     public void tearDown() throws Exception {
 
-
         client.deleteKey(key1);
         client.deleteKey(key2);
         assertEquals(true, client.closeConnection());

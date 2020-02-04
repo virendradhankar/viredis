@@ -6,14 +6,14 @@ import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedTransferQueue;
 
-public abstract class ObjectPool<T> implements Pool<T> {
+public abstract class ObjectPool implements Pool{
     private int size;
     private boolean shutdown;
     private String host;
     private int port;
-    private BlockingQueue objects;
+    private BlockingQueue<ViRedis> queue;
 
-    public ObjectPool(int size, String host, int port) {
+    public ObjectPool(int size, String host, int port) throws RedisException {
         this.size = size;
         this.host = host;
         this.port = port;
@@ -24,56 +24,53 @@ public abstract class ObjectPool<T> implements Pool<T> {
     /*
      * initiate the pool with fix size
      */
-    private void init() {
-        objects = new LinkedTransferQueue();
+    private void init() throws RedisException {
+        queue = new LinkedTransferQueue();
         for (int i = 0; i < size; i++) {
-            objects.add(createRedisConnection(host, port));
+            ViRedis viRedis = createRedisConnection(host, port);
+            if(viRedis != null) queue.add(viRedis);
         }
     }
 
-    private T createRedisConnection(String host, int port) {
+    private ViRedis createRedisConnection(String host, int port) throws RedisException {
         try {
-            return (T) new ViRedis(host, port);
+            return  new ViRedis(host, port);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RedisException("unable to connect to the redis server");
         }
-        return null;
     }
 
     @Override
-    public ViRedis get() {
+    public ViRedis get() throws RedisException {
         if (!shutdown) {
-            ViRedis redisObject = null;
-
+            ViRedis redisObject;
             try {
-                redisObject = (ViRedis)objects.take();
+                redisObject = queue.take();
             }
             catch (Exception e) {
-                e.printStackTrace();
+                throw new RedisException("unable to retrieve the connection object");
             }
-
             return redisObject;
         }
-
-        throw new IllegalStateException("Object pool is already shutdown.");
+        throw new IllegalStateException("pool is already shutdown.");
     }
 
     @Override
-    public void release(T t) {
+    public void returnConnection(ViRedis viRedis) throws RedisException {
         try {
-            objects.offer(t);
+            queue.offer(viRedis);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RedisException("unable to return connection to the pool");
         }
     }
 
     @Override
     public void shutdown() {
-        objects.clear();
+        queue.clear();
     }
 
     public int size() {
-        return objects.size();
+        return queue.size();
     }
 
 }
