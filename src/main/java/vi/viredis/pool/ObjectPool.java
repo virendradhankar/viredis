@@ -10,6 +10,7 @@ import java.util.concurrent.LinkedTransferQueue;
  *  implements the method of common pool interface
  */
 public abstract class ObjectPool implements Pool{
+    public boolean isShutdown;
     private int size;
     private boolean shutdown;
     private String host;
@@ -69,7 +70,7 @@ public abstract class ObjectPool implements Pool{
      */
     @Override
     public ViRedis get() throws RedisException {
-        if (!shutdown) {
+        if (!isShutdown) {
             ViRedis redisObject;
             try {
                 redisObject = queue.take();

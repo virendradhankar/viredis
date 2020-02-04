@@ -1,5 +1,7 @@
 import org.junit.Test;
 import vi.viredis.client.ViRedis;
+import vi.viredis.pool.RedisException;
+import vi.viredis.pool.RedisPool;
 
 public class RedisPoolTest {
     private RedisPool redisPool;
@@ -7,13 +9,13 @@ public class RedisPoolTest {
     private int port = 6379;
 
     @Test
-    public void testCreateRedisConnectionPool() {
+    public void testCreateRedisConnectionPool() throws RedisException {
         redisPool = new RedisPool(10, host, port);
         assert redisPool.size() == 10;
     }
 
     @Test
-    public void testAfterGettingConnectionPoolSizeShouldDecrease(){
+    public void testAfterGettingConnectionPoolSizeShouldDecrease() throws RedisException {
         redisPool = new RedisPool(11, host, port);
         ViRedis viRedis = redisPool.get();
         assert viRedis != null;
@@ -21,27 +23,27 @@ public class RedisPoolTest {
     }
 
     @Test
-    public void testAfterReleasingConnectionPoolSizeShouldIncrease(){
+    public void testAfterReleasingConnectionPoolSizeShouldIncrease() throws RedisException {
         redisPool = new RedisPool(11, host, port);
         ViRedis viRedis = redisPool.get();
-        redisPool.release(viRedis);
+        redisPool.returnConnection(viRedis);
         assert redisPool.size() == 11;
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testConnectionShouldFailWhenPortIsInvalid() {
+    @Test(expected = RedisException.class)
+    public void testConnectionShouldFailWhenPortIsInvalid() throws RedisException {
         redisPool = new RedisPool(10, host, 6380);
     }
 
     @Test
-    public void testCallingShutdownShouldReleaseAllConnections(){
+    public void testCallingShutdownShouldReleaseAllConnections() throws RedisException {
         redisPool = new RedisPool(10, host, port);
         redisPool.shutdown();
         assert redisPool.size() == 0;
     }
 
     @Test(expected = IllegalStateException.class)
-    public void testShouldThrowExceptionWhenPoolIsShutdownAndTriesToAccess(){
+    public void testShouldThrowExceptionWhenPoolIsShutdownAndTriesToAccess() throws RedisException {
         redisPool = new RedisPool(10, host, port);
         redisPool.isShutdown = true;
         redisPool.get();

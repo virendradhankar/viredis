@@ -1,8 +1,8 @@
 package vi.viredis.pool;
 
 /*
- * whenever there is an connectivity issue with the redis server
- * this exception will be thrown.
+ * if there is an connectivity issue with the redis server
+ * exception will be thrown.
  */
 public class RedisException extends Exception {
 
