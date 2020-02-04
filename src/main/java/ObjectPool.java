@@ -29,11 +29,11 @@ public abstract class ObjectPool<T> implements Pool<T> {
     private void init() {
         objects = new LinkedTransferQueue();
         for (int i = 0; i < size; i++) {
-            objects.add(createNew(host, port));
+            objects.add(createRedisConnection(host, port));
         }
     }
 
-    private T createNew(String host, int port) {
+    private T createRedisConnection(String host, int port) {
         try {
             return (T) new ViRedis(host, port);
         } catch (IOException e) {
@@ -45,16 +45,16 @@ public abstract class ObjectPool<T> implements Pool<T> {
     @Override
     public ViRedis get() {
         if (!shutdown) {
-            ViRedis t = null;
+            ViRedis redisObject = null;
 
             try {
-                t = (ViRedis)objects.take();
+                redisObject = (ViRedis)objects.take();
             }
             catch (Exception e) {
                 e.printStackTrace();
             }
 
-            return t;
+            return redisObject;
         }
 
         throw new IllegalStateException("Object pool is already shutdown.");
