@@ -6,16 +6,16 @@ import java.util.concurrent.LinkedTransferQueue;
 
 public abstract class ObjectPool<T> implements Pool<T> {
     private int size;
-    private boolean shutdown;
     private String host;
     private int port;
     private BlockingQueue objects;
+    public boolean isShutdown;
 
     public ObjectPool(int size, String host, int port) {
         this.size = size;
         this.host = host;
         this.port = port;
-        shutdown = false;
+        isShutdown = false;
         init();
     }
 
@@ -40,11 +40,11 @@ public abstract class ObjectPool<T> implements Pool<T> {
 
     @Override
     public ViRedis get() {
-        if (!shutdown) {
+        if (!isShutdown) {
             ViRedis redisObject = null;
 
             try {
-                redisObject = (ViRedis)objects.take();
+                redisObject = (ViRedis) objects.take();
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -73,5 +73,4 @@ public abstract class ObjectPool<T> implements Pool<T> {
     public int size() {
         return objects.size();
     }
-
 }

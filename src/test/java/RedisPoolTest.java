@@ -40,4 +40,11 @@ public class RedisPoolTest {
         assert redisPool.size() == 0;
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void testShouldThrowExceptionWhenPoolIsShutdownAndTriesToAccess(){
+        redisPool = new RedisPool(10, host, port);
+        redisPool.isShutdown = true;
+        redisPool.get();
+    }
+
 }
