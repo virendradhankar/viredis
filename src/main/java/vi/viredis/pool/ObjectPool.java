@@ -5,6 +5,7 @@ import vi.viredis.client.ViRedis;
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedTransferQueue;
+
 /*
  *  implements the method of common pool interface
  */
