@@ -5,14 +5,10 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedTransferQueue;
 
 public abstract class ObjectPool<T> implements Pool<T> {
-
     private int size;
-
     private boolean shutdown;
-
     private String host;
     private int port;
-
     private BlockingQueue objects;
 
     public ObjectPool(int size, String host, int port) {
