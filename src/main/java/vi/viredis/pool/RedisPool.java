@@ -47,7 +47,7 @@ public class RedisPool implements Pool {
     }
 
     /*
-     * created the redis connection
+     * creates the redis connection
      * @param host
      *        redis server host name
      * @param port
