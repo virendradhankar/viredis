@@ -69,11 +69,8 @@ public abstract class ObjectPool implements Pool{
      */
     @Override
     public ViRedis get() throws RedisException {
-
         if(queue.size() == 0)
-             {
-                throw new RedisException("pool capacity is reached not able to get new connection");
-             }
+            throw new RedisException("pool capacity is reached not able to get new connection");
             if (!isShutdown) {
                 ViRedis redisObject;
                 try {
