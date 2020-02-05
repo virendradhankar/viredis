@@ -1,6 +1,7 @@
 package vi.viredis.pool;
 
 import vi.viredis.client.ViRedis;
+import vi.viredis.exceptions.RedisException;
 
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
