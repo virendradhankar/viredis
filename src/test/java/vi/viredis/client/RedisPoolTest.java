@@ -52,9 +52,7 @@ public class RedisPoolTest {
     @Test(expected = RedisException.class)
     public void testShouldNotBlockWhenClientAsksForMoreThanAvailableConnections() throws RedisException {
         redisPool = new RedisPool(10, host, port);
-        for(int i = 0; i < 12; i++){
-            System.out.println(redisPool.get());
-        }
+        for(int i = 0; i < 12; i++) redisPool.get();
     }
 
 }
