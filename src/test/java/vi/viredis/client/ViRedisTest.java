@@ -15,7 +15,6 @@ import static org.junit.Assert.*;
 
 public class ViRedisTest {
 
-
     private ViRedis client;
     private String key1 = "key1";
     private  String key2 = "key2";

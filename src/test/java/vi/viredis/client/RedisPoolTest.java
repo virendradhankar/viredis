@@ -1,7 +1,8 @@
+package vi.viredis.client;
 import org.junit.Test;
-import vi.viredis.client.ViRedis;
 import vi.viredis.pool.RedisException;
 import vi.viredis.pool.RedisPool;
+import static org.junit.Assert.assertEquals;
 
 public class RedisPoolTest {
     private RedisPool redisPool;
@@ -11,15 +12,14 @@ public class RedisPoolTest {
     @Test
     public void testCreateRedisConnectionPool() throws RedisException {
         redisPool = new RedisPool(10, host, port);
-        assert redisPool.size() == 10;
+        assertEquals(redisPool.size(), 10);
     }
 
     @Test
     public void testAfterGettingConnectionPoolSizeShouldDecrease() throws RedisException {
         redisPool = new RedisPool(11, host, port);
         ViRedis viRedis = redisPool.get();
-        assert viRedis != null;
-        assert redisPool.size() == 10;
+        assertEquals(redisPool.size(), 10);
     }
 
     @Test
@@ -27,7 +27,7 @@ public class RedisPoolTest {
         redisPool = new RedisPool(11, host, port);
         ViRedis viRedis = redisPool.get();
         redisPool.returnConnection(viRedis);
-        assert redisPool.size() == 11;
+        assertEquals(redisPool.size(), 11);
     }
 
     @Test(expected = RedisException.class)
@@ -39,7 +39,7 @@ public class RedisPoolTest {
     public void testCallingShutdownShouldReleaseAllConnections() throws RedisException {
         redisPool = new RedisPool(10, host, port);
         redisPool.shutdown();
-        assert redisPool.size() == 0;
+        assertEquals(redisPool.size(), 0);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -47,6 +47,14 @@ public class RedisPoolTest {
         redisPool = new RedisPool(10, host, port);
         redisPool.isShutdown = true;
         redisPool.get();
+    }
+
+    @Test(expected = RedisException.class)
+    public void testShouldNotBlockWhenClientAsksForMoreThanAvailableConnections() throws RedisException {
+        redisPool = new RedisPool(10, host, port);
+        for(int i = 0; i < 12; i++){
+            System.out.println(redisPool.get());
+        }
     }
 
 }
