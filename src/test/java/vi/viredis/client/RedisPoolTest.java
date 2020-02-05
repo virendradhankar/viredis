@@ -1,7 +1,7 @@
 package vi.viredis.client;
 import org.junit.Test;
-import vi.viredis.pool.RedisException;
 import vi.viredis.pool.RedisPool;
+import vi.viredis.pool.RedisException;
 import static org.junit.Assert.assertEquals;
 
 public class RedisPoolTest {
