@@ -20,7 +20,7 @@ System.out.println(client.get("foo"); // will print 'bar'
 ## Is the connection thread safe?
 - No. One client connection must be used by single thread at any point of time.
 
-## How to manage connections for multithread environmet ?
+## How to manage connections for multithread environment ?
 - It's upto the user of this library.
 - 1. Socket connections could be created for every thread on the fly
 - OR
