@@ -11,7 +11,7 @@ public interface Pool {
     /*
      * @return one of the pooled redis object.
      */
-    ViRedis getConnection() throws RedisException, RedisException;
+    ViRedis getConnection() throws RedisException;
 
     /*
      * @param viRedis to be return back to pool
