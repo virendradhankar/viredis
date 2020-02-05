@@ -93,19 +93,19 @@ public class RedisPool implements Pool {
      * @throws RedisException
      */
     @Override
-    public void returnConnection(ViRedis viRedis) throws RedisException {
+    public void returnConnection(ViRedis oldConnection) throws RedisException {
         try {
-            ViRedis newConnection = invalidateoldConnectionAndCreateNew(viRedis);
+            ViRedis newConnection = invalidateoldConnectionAndCreateNew(oldConnection);
             queue.offer(newConnection);
         } catch (Exception e) {
             throw new RedisException("unable to return connection to the pool.");
         }
     }
 
-    private ViRedis invalidateoldConnectionAndCreateNew(ViRedis viRedis) throws IOException {
-        ViRedis newConnection = new ViRedis(viRedis.getHost(), viRedis.getPort());
-        viRedis.closeConnection();
-        viRedis = null; // throw away
+    private ViRedis invalidateoldConnectionAndCreateNew(ViRedis oldConnection) throws IOException {
+        ViRedis newConnection = new ViRedis(oldConnection.getHost(), oldConnection.getPort());
+        oldConnection.closeConnection();
+        oldConnection = null; // throw away
         return newConnection;
     }
 
