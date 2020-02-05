@@ -5,13 +5,12 @@ import vi.viredis.client.ViRedis;
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedTransferQueue;
-import java.util.concurrent.TimeUnit;
 
 /*
  *  implements the method of common pool interface
  */
 public class RedisPool implements Pool {
-    public boolean isShutdown;
+    private boolean isShutdown;
     private int size;
     private String host;
     private int port;
@@ -64,25 +63,24 @@ public class RedisPool implements Pool {
     }
 
     /*
-     * returns the pooled redis connection object
+     * returns the pooled redis connection
      * @throws RedisException
      */
     @Override
-    public ViRedis get() throws RedisException {
+    public ViRedis getConnection() throws RedisException {
         if(queue.size() == 0)
             throw new RedisException("pool capacity is reached not able to get new connection");
              if (!isShutdown) {
-                 ViRedis redisObject;
+                 ViRedis redisConnection;
                     try {
-                       redisObject = queue.take();
+                       redisConnection = queue.take();
                 }
                 catch (Exception e) {
                     throw new RedisException("unable to retrieve the connection object.");
                 }
-                return redisObject;
+                return redisConnection;
             }
-
-        throw new IllegalStateException("pool is already shutdown.");
+        throw new RedisException("pool is already shutdown.");
     }
 
     /*
@@ -95,15 +93,15 @@ public class RedisPool implements Pool {
     @Override
     public void returnConnection(ViRedis oldConnection) throws RedisException {
         try {
-            ViRedis newConnection = invalidateoldConnectionAndCreateNew(oldConnection);
+            ViRedis newConnection = invalidateOldConnectionAndCreateNew(oldConnection);
             queue.offer(newConnection);
         } catch (Exception e) {
             throw new RedisException("unable to return connection to the pool.");
         }
     }
 
-    private ViRedis invalidateoldConnectionAndCreateNew(ViRedis oldConnection) throws IOException {
-        ViRedis newConnection = new ViRedis(oldConnection.getHost(), oldConnection.getPort());
+    private ViRedis invalidateOldConnectionAndCreateNew(ViRedis oldConnection) throws IOException {
+        ViRedis newConnection = new ViRedis(this.host, this.port);
         oldConnection.closeConnection();
         oldConnection = null; // throw away
         return newConnection;
@@ -115,6 +113,7 @@ public class RedisPool implements Pool {
 
     @Override
     public void shutdown() {
+        isShutdown = true;
         queue.clear();
     }
     /*

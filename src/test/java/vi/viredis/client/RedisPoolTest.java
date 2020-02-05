@@ -18,14 +18,14 @@ public class RedisPoolTest {
     @Test
     public void testAfterGettingConnectionPoolSizeShouldDecrease() throws RedisException {
         redisPool = new RedisPool(11, host, port);
-        ViRedis viRedis = redisPool.get();
+        ViRedis viRedis = redisPool.getConnection();
         assertEquals(redisPool.size(), 10);
     }
 
     @Test
     public void testAfterReleasingConnectionPoolSizeShouldIncrease() throws RedisException {
         redisPool = new RedisPool(11, host, port);
-        ViRedis viRedis = redisPool.get();
+        ViRedis viRedis = redisPool.getConnection();
         redisPool.returnConnection(viRedis);
         assertEquals(redisPool.size(), 11);
     }
@@ -42,17 +42,17 @@ public class RedisPoolTest {
         assertEquals(redisPool.size(), 0);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = RedisException.class)
     public void testShouldThrowExceptionWhenPoolIsShutdownAndTriesToAccess() throws RedisException {
         redisPool = new RedisPool(10, host, port);
-        redisPool.isShutdown = true;
-        redisPool.get();
+        redisPool.shutdown();
+        redisPool.getConnection();
     }
 
     @Test(expected = RedisException.class)
     public void testShouldNotBlockWhenClientAsksForMoreThanAvailableConnections() throws RedisException {
         redisPool = new RedisPool(10, host, port);
-        for(int i = 0; i < 12; i++) redisPool.get();
+        for(int i = 0; i < 12; i++) redisPool.getConnection();
     }
 
 }

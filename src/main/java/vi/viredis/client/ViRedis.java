@@ -13,16 +13,10 @@ import java.util.List;
 import java.util.Set;
 
 public class ViRedis implements RedisCommands {
-
     private RedisServerWriter writer;
     private RedisServerReader reader;
 
-    private String host;
-    private int port;
-
     public ViRedis(String host, int port) throws IOException {
-        this.host = host;
-        this.port = port;
         Socket socket = new Socket(host, port);
         init(socket);
     }
@@ -206,14 +200,5 @@ public class ViRedis implements RedisCommands {
         writer.sendCommand(RedisProtocolCommand.EXEC);
         return reader.readResponseAsList();
     }
-
-    public String getHost() {
-        return this.host;
-    }
-
-    public int getPort() {
-        return this.port;
-    }
-
 }
 
