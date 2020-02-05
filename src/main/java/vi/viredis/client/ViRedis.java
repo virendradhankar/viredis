@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Set;
 
 public class ViRedis implements RedisCommands {
-
     private RedisServerWriter writer;
     private RedisServerReader reader;
 
@@ -201,7 +200,5 @@ public class ViRedis implements RedisCommands {
         writer.sendCommand(RedisProtocolCommand.EXEC);
         return reader.readResponseAsList();
     }
-
-
 }
 

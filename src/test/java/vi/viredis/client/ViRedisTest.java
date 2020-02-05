@@ -15,7 +15,6 @@ import static org.junit.Assert.*;
 
 public class ViRedisTest {
 
-
     private ViRedis client;
     private String key1 = "key1";
     private  String key2 = "key2";
@@ -34,7 +33,6 @@ public class ViRedisTest {
 
     @After
     public void tearDown() throws Exception {
-
 
         client.deleteKey(key1);
         client.deleteKey(key2);

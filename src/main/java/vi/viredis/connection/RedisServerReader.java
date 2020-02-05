@@ -47,13 +47,13 @@ public class RedisServerReader {
         return response;
     }
 
-    private Long readNumber() throws IOException, RedisException {
+    private Long readNumber() throws IOException {
         String response = readSimpleString();
         return Long.parseLong(response);
 
     }
 
-    private String readBulkString() throws IOException, RedisException {
+    private String readBulkString() throws IOException {
 
         int ch =  readNumber().intValue();
         if(ch == -1){
@@ -71,7 +71,7 @@ public class RedisServerReader {
         return new String(byteArr);
     }
 
-    private List<Object> readRedisArray() throws IOException, RedisException {
+    private List<Object> readRedisArray() throws IOException {
         long len = readNumber();
         if(len == -1){
             return null;
@@ -85,7 +85,7 @@ public class RedisServerReader {
         return response;
     }
 
-    private String readSimpleString() throws IOException, RedisException {
+    private String readSimpleString() throws IOException {
         Integer bufferSize = DEFAULT_BUFFER_SIZE;
         byte [] bufferArr = new byte[bufferSize];
         int ch = 0;
@@ -116,7 +116,7 @@ public class RedisServerReader {
     }
 
 
-    public boolean readResponseAsBool() throws IOException, RedisException {
+    public boolean readResponseAsBool() throws IOException {
         Object response = readResponse();
         if(response != null){
             if(response instanceof String){
@@ -128,12 +128,12 @@ public class RedisServerReader {
         return false;
     }
 
-    public String readResponseAsString() throws IOException, RedisException {
+    public String readResponseAsString() throws IOException {
         Object response = readResponse();
         return (response== null ? null: response.toString());
     }
 
-    public List<String> readResponseAsList() throws IOException, RedisException {
+    public List<String> readResponseAsList() throws IOException {
         Object response =  readResponse();
         return getResponseInListFormat(response);
 
