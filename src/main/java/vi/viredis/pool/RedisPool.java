@@ -86,7 +86,7 @@ public class RedisPool implements Pool {
     }
 
     /*
-     * it invalidates the used connection and closes the connection with the
+     * invalidates the used connection and closes the connection with the
      * redis server and creates a new connection with the same host and port number as
      * the previous connection and adds to the pool.
      *
