@@ -1,5 +1,6 @@
 # ViRedis
 -High level Redis client
+-Use it to connect java application to redis server
 
 ## Usage
 -It is a maven project.
